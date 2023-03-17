@@ -1,4 +1,7 @@
-from . import permissions
+from datetime import date
+
+from . import permissions, movies_directory
+from .movie import Movie
 from .rented_movie import RentedMovie
 from .exceptions import (
     NoCreditsForMovieRent,
@@ -35,6 +38,7 @@ def watch_movie(user, movie):
 def _start_streaming(user, movie):
     print(f"User: {user} is watching {movie}")
 
+
 #
 # def watch_movie(user, movie):
 #     rented_movie = _get_rented_movie(user, movie)
@@ -60,3 +64,9 @@ def refresh_credits(acting_user, user_to_be_refreshed):
     else:
         raise ActionNotAllowed()
 
+
+def add_movie():
+    new_movie = Movie(name=input("Tytul: "),
+                      category=input("Kategoria: "),
+                      release_date=date.fromisoformat(input("Data wydania w formacie (RRRR-MM-DD, np. 2005-05-23): ")))
+    movies_directory.add_movie(new_movie)

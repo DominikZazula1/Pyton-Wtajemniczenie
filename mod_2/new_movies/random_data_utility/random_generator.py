@@ -2,6 +2,7 @@ import csv
 import os
 import random
 from dataclasses import dataclass
+from datetime import date
 
 from new_movies.movie import Movie
 
@@ -16,6 +17,20 @@ MAX_RATE = 5
 class MovieData:
     name: str
     category: str
+
+
+def generate_date():
+    year = random.randint(1980, 2020)
+    month = random.randint(1, 12)
+    day = random.randint(1, 31)
+    try:
+        random_date = date(year=year, month=month, day=day)
+    except ValueError:
+        if month != 2:
+            random_date = date(year=year, month=month, day=day-1)
+        else:
+            random_date = date(year=year, month=month, day=day-3)
+    return random_date
 
 
 def generate_random_movies(movies_number):
@@ -37,7 +52,8 @@ def generate_random_movies(movies_number):
     for _ in range(movies_number):
         movie_index = random.randrange(0, len(movies_data))
         movie_data = movies_data.pop(movie_index)
-        movie = Movie(name=movie_data.name, category=movie_data.category)
+        movie_date = generate_date()
+        movie = Movie(name=movie_data.name, category=movie_data.category, release_date=movie_date)
         movies.append(movie)
 
         voters_candidates = names.copy()

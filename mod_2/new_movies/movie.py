@@ -6,14 +6,15 @@ class Movie:
     MIN_ALLOWED_RATE = 1
     MAX_ALLOWED_RATE = 5
 
-    def __init__(self, name, category):
+    def __init__(self, name, category, release_date):
         self.name = name
         self.category = category
+        self.release_date = release_date
         self._rates = []
         self._viewers = []
 
     def __str__(self):
-        return f"{self.name} - {self.category} Movie, rate: {self.rate:.2f}"
+        return f"{self.name} - {self.category} Movie, rate: {self.rate:.2f} ({self.release_date})"
 
     @property
     def rate(self):
