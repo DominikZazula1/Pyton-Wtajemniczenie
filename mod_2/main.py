@@ -3,9 +3,9 @@ from new_movies import movies_ranking, actions, movies_directory
 
 
 def run_example():
-    movies_ranking.print_all_movies_ranking(movies_directory.available_movies)
+    print(movies_directory.available_movies[0].today_date)
     actions.add_movie()
-    movies_ranking.print_all_movies_ranking(movies_directory.available_movies)
+    print(movies_directory.available_movies[-1].today_date)
 
 
 if __name__ == "__main__":
