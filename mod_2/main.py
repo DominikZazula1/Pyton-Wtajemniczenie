@@ -1,37 +1,31 @@
-from new_movies import actions
-from new_movies.user import User, Role
 
-from new_movies.random_data_utility import random_generator
+def fibonacci_r(n: int):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        return fibonacci_r(n - 1) + fibonacci_r(n - 2)
+
+
+def fibonacci_i(n: int):
+    if n == 0:
+        return 0
+    elif n == 1:
+        return 1
+    else:
+        f1 = 0
+        f2 = 1
+        for _ in range(n):
+            m = f1 + f2
+            f1 = f2
+            f2 = m
+        return f1
 
 
 def run_example():
-    some_movies = random_generator.generate_random_movies(movies_number=15)
-    standard_user = User(
-        first_name="Mikołaj",
-        last_name="Lewandowski",
-        credits_left=5,
-        role=Role.USER,
-        rented_movies=[],
-    )
-
-    # actions.watch_movie(standard_user, some_movies[0])
-    actions.rent_movie(standard_user, some_movies[0])
-    actions.watch_movie(standard_user, some_movies[0])
-    # actions.watch_movie(standard_user, some_movies[0])
-    # actions.watch_movie(standard_user, some_movies[0])
-    # actions.watch_movie(standard_user, some_movies[0])
-
-    # print(standard_user.credits_left)
-    # actions.refresh_credits(standard_user, standard_user)
-    # admin_user = User(
-    #     first_name="Admin",
-    #     last_name="Admin",
-    #     credits_left=1_000,
-    #     role=Role.ADMIN,
-    #     rented_movies=[],
-    # )
-    # actions.refresh_credits(admin_user, standard_user)
-    # print(standard_user.credits_left)
+    print(fibonacci_r(10))
+    print(fibonacci_i(10))
 
 
 if __name__ == "__main__":
