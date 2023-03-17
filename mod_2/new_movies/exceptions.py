@@ -10,3 +10,19 @@ class InvalidRateValue(ValueError):
         if message is None:
             message = "Movie rate must be a number greater than 0 and lower than 6"
         super().__init__(message)
+
+
+class NoCreditsForMovieRent:
+    pass
+
+
+class ActionNotAllowed:
+    pass
+
+
+class MovieNotFound:
+    pass
+
+
+class ViewsLimitReached:
+    pass
