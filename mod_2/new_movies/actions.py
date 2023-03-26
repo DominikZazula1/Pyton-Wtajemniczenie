@@ -1,6 +1,7 @@
 from datetime import date
 
 from . import permissions, movies_directory
+from .cinema_schedule import get_schedule, Weekday
 from .movie import Movie
 from .rented_movie import RentedMovie
 from .exceptions import (
@@ -9,6 +10,15 @@ from .exceptions import (
     MovieNotFound,
     ViewsLimitReached,
 )
+
+
+def cinema_movies_schedule():
+    iso_date = input("When would you like to visit cinema? ")
+    weekday = date.fromisoformat(iso_date).isoweekday()
+    print("This day you can watch: ")
+    schedule = get_schedule(Weekday(weekday))
+    for movie in schedule:
+        print(movie)
 
 
 def rent_movie(user, movie):
