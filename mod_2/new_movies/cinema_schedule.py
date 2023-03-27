@@ -53,11 +53,16 @@ weekly_schedule = {
 }
 
 
+def sort_weekly_schedule(schedule):
+    return {
+        weekday: sorted(showtime, key=lambda movie_showtime: movie_showtime.showtime)
+        for weekday, showtime in schedule.items()
+    }
+
+
 def get_movies_showtime_by_weekday(weekday: Weekday):
-    return weekly_schedule[weekday]
+    sorted_schedule = sort_weekly_schedule(weekly_schedule)
+    return sorted_schedule[weekday]
 
 
-def generate_time():
-    random_hour = random.randint(10, 23)
-    random_minute = random.randint(0, 59)
-    return time(random_hour, random_minute)
+

@@ -1,4 +1,5 @@
-from datetime import date
+import datetime
+from datetime import date, datetime
 
 from . import permissions, movies_directory, cinema_schedule
 from .cinema_schedule import Weekday
@@ -78,6 +79,8 @@ def cinema_movies_schedule():
     weekday = Weekday(weekday_number)
     print("This day you can watch:")
     schedule = cinema_schedule.get_movies_showtime_by_weekday(weekday)
-    sorted_schedule = sorted(schedule, key=lambda movie: movie.showtime)
-    for movie_showtime in sorted_schedule:
-        print(f"{movie_showtime.showtime} {movie_showtime.movie}")
+    for movie_showtime in schedule:
+        if date.today() == cinema_date and datetime.now().time() > movie_showtime.showtime:
+            pass
+        elif date.today() < cinema_date:
+            print(f"{movie_showtime.showtime} {movie_showtime.movie}")
