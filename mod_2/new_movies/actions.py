@@ -1,7 +1,8 @@
 from datetime import date
 
 from . import permissions, movies_directory
-from .cinema_schedule import get_schedule, Weekday
+from .cinema_schedule import get_schedule, Weekday, generate_time
+from .configuration import UNLIMITED_WATCHING_START_DATE, UNLIMITED_WATCHING_END_DATE
 from .movie import Movie
 from .rented_movie import RentedMovie
 from .exceptions import (
@@ -18,7 +19,7 @@ def cinema_movies_schedule():
     print("This day you can watch: ")
     schedule = get_schedule(Weekday(weekday))
     for movie in schedule:
-        print(movie)
+        print(movie, f"Start at: {generate_time()}")
 
 
 def rent_movie(user, movie):
@@ -29,43 +30,40 @@ def rent_movie(user, movie):
 
 
 def watch_movie(user, movie):
-    def get_rented_movie(user_with_movies, searching_movie):
-        for rented_movie in user_with_movies.rented_movies:
-            if rented_movie.movie == searching_movie:
-                return rented_movie
-
-    user_rented_movie = get_rented_movie(user, movie)
-    if not user_rented_movie:
+    rented_movie = _get_rented_movie(user, movie)
+    if not rented_movie:
         raise MovieNotFound()
 
-    if user_rented_movie.views_left < 1:
+    if _unlimited_watching_promo():
+        _watch_movie_during_unlimited_promo(user, rented_movie)
+    else:
+        _watch_movie_during_standard_period(user, rented_movie)
+
+
+def _get_rented_movie(user, movie):
+    for rented_movie in user.rented_movies:
+        if rented_movie.movie == movie:
+            return rented_movie
+
+
+def _unlimited_watching_promo():
+    return UNLIMITED_WATCHING_START_DATE <= date.today() <= UNLIMITED_WATCHING_END_DATE
+
+
+def _watch_movie_during_unlimited_promo(user, rented_movie):
+    _start_streaming(user, rented_movie.movie)
+
+
+def _watch_movie_during_standard_period(user, rented_movie):
+    if rented_movie.views_left < 1:
         raise ViewsLimitReached()
 
-    user_rented_movie.views_left -= 1
-    _start_streaming(user, movie)
+    rented_movie.views_left -= 1
+    _start_streaming(user, rented_movie.movie)
 
 
 def _start_streaming(user, movie):
     print(f"User: {user} is watching {movie}")
-
-
-#
-# def watch_movie(user, movie):
-#     rented_movie = _get_rented_movie(user, movie)
-#     if not rented_movie:
-#         raise MovieNotFound()
-#
-#     if rented_movie.views_left < 1:
-#         raise ViewsLimitReached()
-#
-#     rented_movie.views_left -= 1
-#     _start_streaming(user, movie)
-#
-#
-# def _get_rented_movie(user, movie):
-#     for rented_movie in user.rented_movies:
-#         if rented_movie.movie == movie:
-#             return rented_movie
 
 
 def refresh_credits(acting_user, user_to_be_refreshed):

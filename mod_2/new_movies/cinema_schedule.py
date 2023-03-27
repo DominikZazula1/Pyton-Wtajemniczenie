@@ -1,3 +1,5 @@
+import random
+from datetime import time
 from enum import Enum, auto
 
 from . import movies_directory
@@ -26,3 +28,9 @@ weekly_schedule = {
 
 def get_schedule(weekday: Weekday):
     return weekly_schedule[weekday]
+
+
+def generate_time():
+    random_hour = random.randint(10, 23)
+    random_minute = random.randint(0, 59)
+    return time(random_hour, random_minute)

@@ -1,5 +1,4 @@
-from new_movies.cinema_schedule import get_schedule, Weekday
-from new_movies import movies_ranking, actions, movies_directory
+from new_movies import actions
 
 
 def run_example():
