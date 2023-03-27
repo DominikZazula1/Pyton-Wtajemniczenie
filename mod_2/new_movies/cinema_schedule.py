@@ -1,8 +1,10 @@
 import random
+from dataclasses import dataclass
 from datetime import time
 from enum import Enum, auto
 
 from . import movies_directory
+from .movie import Movie
 
 
 class Weekday(Enum):
@@ -15,18 +17,43 @@ class Weekday(Enum):
     SUNDAY = auto()
 
 
+@dataclass
+class MovieShowtime:
+    movie: Movie
+    showtime: time
+
+
 weekly_schedule = {
-        Weekday.MONDAY: movies_directory.available_movies[0:2],
-        Weekday.TUESDAY: movies_directory.available_movies[2:4],
-        Weekday.WEDNESDAY: movies_directory.available_movies[4:6],
-        Weekday.THURSDAY: movies_directory.available_movies[6:8],
-        Weekday.FRIDAY: movies_directory.available_movies[8:11],
-        Weekday.SATURDAY: movies_directory.available_movies[11:12],
-        Weekday.SUNDAY: movies_directory.available_movies[12:14],
-    }
+    Weekday.MONDAY: [
+        MovieShowtime(movies_directory.available_movies[0], time(15, 15)),
+        MovieShowtime(movies_directory.available_movies[1], time(17, 15)),
+    ],
+    Weekday.TUESDAY: [
+        MovieShowtime(movies_directory.available_movies[3], time(17, 15)),
+        MovieShowtime(movies_directory.available_movies[2], time(15, 15)),
+    ],
+    Weekday.WEDNESDAY: [
+        MovieShowtime(movies_directory.available_movies[4], time(15, 15)),
+        MovieShowtime(movies_directory.available_movies[5], time(17, 15)),
+    ],
+    Weekday.THURSDAY: [
+        MovieShowtime(movies_directory.available_movies[7], time(17, 15)),
+        MovieShowtime(movies_directory.available_movies[6], time(15, 15)),
+    ],
+    Weekday.FRIDAY: [
+        MovieShowtime(movies_directory.available_movies[10], time(19, 20)),
+        MovieShowtime(movies_directory.available_movies[8], time(15, 15)),
+        MovieShowtime(movies_directory.available_movies[9], time(17, 15)),
+    ],
+    Weekday.SATURDAY: [MovieShowtime(movies_directory.available_movies[11], time(18, 00))],
+    Weekday.SUNDAY: [
+        MovieShowtime(movies_directory.available_movies[12], time(13, 25)),
+        MovieShowtime(movies_directory.available_movies[13], time(14, 50)),
+    ],
+}
 
 
-def get_schedule(weekday: Weekday):
+def get_movies_showtime_by_weekday(weekday: Weekday):
     return weekly_schedule[weekday]
 
 

@@ -1,7 +1,7 @@
 from datetime import date
 
-from . import permissions, movies_directory
-from .cinema_schedule import get_schedule, Weekday, generate_time
+from . import permissions, movies_directory, cinema_schedule
+from .cinema_schedule import Weekday
 from .configuration import UNLIMITED_WATCHING_START_DATE, UNLIMITED_WATCHING_END_DATE
 from .movie import Movie
 from .rented_movie import RentedMovie
@@ -11,15 +11,6 @@ from .exceptions import (
     MovieNotFound,
     ViewsLimitReached,
 )
-
-
-def cinema_movies_schedule():
-    iso_date = input("When would you like to visit cinema? ")
-    weekday = date.fromisoformat(iso_date).isoweekday()
-    print("This day you can watch: ")
-    schedule = get_schedule(Weekday(weekday))
-    for movie in schedule:
-        print(movie, f"Start at: {generate_time()}")
 
 
 def rent_movie(user, movie):
@@ -78,3 +69,15 @@ def add_movie():
                       category=input("Kategoria: "),
                       release_date=date.fromisoformat(input("Data wydania w formacie (RRRR-MM-DD, np. 2005-05-23): ")))
     movies_directory.add_movie(new_movie)
+
+
+def cinema_movies_schedule():
+    cinema_date_input = input("When would you like to visit the cinema? (YYYY-MM-DD): ")
+    cinema_date = date.fromisoformat(cinema_date_input)
+    weekday_number = cinema_date.isoweekday()
+    weekday = Weekday(weekday_number)
+    print("This day you can watch:")
+    schedule = cinema_schedule.get_movies_showtime_by_weekday(weekday)
+    sorted_schedule = sorted(schedule, key=lambda movie: movie.showtime)
+    for movie_showtime in sorted_schedule:
+        print(f"{movie_showtime.showtime} {movie_showtime.movie}")
