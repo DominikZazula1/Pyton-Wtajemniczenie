@@ -1,5 +1,5 @@
-import datetime
-from datetime import date, datetime
+
+from datetime import date, time
 
 from . import permissions, movies_directory, cinema_schedule
 from .cinema_schedule import Weekday
@@ -75,12 +75,12 @@ def add_movie():
 def cinema_movies_schedule():
     cinema_date_input = input("When would you like to visit the cinema? (YYYY-MM-DD): ")
     cinema_date = date.fromisoformat(cinema_date_input)
+    cinema_time_input = input("what time would you like to visit the cinema? (HH:MM): ")
+    cinema_time = time.fromisoformat(cinema_time_input)
     weekday_number = cinema_date.isoweekday()
     weekday = Weekday(weekday_number)
     print("This day you can watch:")
     schedule = cinema_schedule.get_movies_showtime_by_weekday(weekday)
     for movie_showtime in schedule:
-        if date.today() == cinema_date and datetime.now().time() > movie_showtime.showtime:
-            pass
-        elif date.today() < cinema_date:
+        if date.today() <= cinema_date and cinema_time <= movie_showtime.showtime:
             print(f"{movie_showtime.showtime} {movie_showtime.movie}")
