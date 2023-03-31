@@ -1,7 +1,8 @@
-import random
 from dataclasses import dataclass
-from datetime import time
+from datetime import time, datetime, date
 from enum import Enum, auto
+
+import datetime as datetime
 
 from . import movies_directory
 from .movie import Movie
@@ -21,6 +22,25 @@ class Weekday(Enum):
 class MovieShowtime:
     movie: Movie
     showtime: time
+
+
+@dataclass
+class MovieShowDatetime:
+    movie: Movie
+    showdatetime: datetime
+
+    @staticmethod
+    def from_movie_showtime_and_date(movie_showtime: MovieShowtime, movie_date: date):
+        date_time = datetime.datetime(
+            movie_date.year,
+            movie_date.month,
+            movie_date.day,
+            movie_showtime.showtime.hour,
+            movie_showtime.showtime.minute,
+            movie_showtime.showtime.second,
+            movie_showtime.showtime.microsecond
+        )
+        return MovieShowDatetime(movie_showtime.movie, date_time)
 
 
 weekly_schedule = {
@@ -65,4 +85,16 @@ def get_movies_showtime_by_weekday(weekday: Weekday):
     return sorted_schedule[weekday]
 
 
+def generate_february_week_schedule(schedule):
+    february_21 = date(year=2021, month=2, day=21)
 
+    result = {}
+    for weekday, showtimes in schedule.items():
+        particular_weekday_in_february = february_21.replace(day=february_21.day + weekday.value)
+        result[weekday] = [
+            MovieShowDatetime.from_movie_showtime_and_date(
+                movie_showtime, particular_weekday_in_february
+            )
+            for movie_showtime in showtimes
+        ]
+    return result
