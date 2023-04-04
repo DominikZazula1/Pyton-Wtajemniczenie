@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from new_movies.exceptions import MovieAlreadySeen, InvalidRateValue
 
@@ -12,7 +12,7 @@ class Movie:
         self.name = name
         self.category = category
         self.release_date = release_date
-        self.today_date = date.today()
+        self.added_at_datetime = datetime.today()
         self._rates = []
         self._viewers = []
 
