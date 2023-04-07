@@ -22,6 +22,10 @@ class MovieShowtime:
     movie: Movie
     showtime: datetime.time
 
+    def info_with_showtime_format(self, date_and_time_format):
+        return self.showtime.strftime(date_and_time_format.time_format)
+
+
 
 @dataclass
 class MovieShowDatetime:

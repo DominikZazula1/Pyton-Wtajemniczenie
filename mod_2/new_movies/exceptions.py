@@ -26,3 +26,7 @@ class MovieNotFound:
 
 class ViewsLimitReached:
     pass
+
+
+class UserNotFound(Exception):
+    pass

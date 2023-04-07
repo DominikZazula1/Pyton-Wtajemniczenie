@@ -1,10 +1,9 @@
 from datetime import datetime
 
-from new_movies.exceptions import MovieAlreadySeen, InvalidRateValue
+from .exceptions import MovieAlreadySeen, InvalidRateValue
 
 
 class Movie:
-
     MIN_ALLOWED_RATE = 1
     MAX_ALLOWED_RATE = 5
 
@@ -18,6 +17,10 @@ class Movie:
 
     def __str__(self):
         return f"{self.name} - {self.category} Movie, rate: {self.rate:.2f} ({self.release_date})"
+
+    def info_with_date_format(self, date_and_time_format):
+        release_date_formatted = self.release_date.strftime(date_and_time_format.date_format)
+        return f"{self.name} - {self.category} Movie, rate: {self.rate:.2f} ({release_date_formatted})"
 
     @property
     def rate(self):
