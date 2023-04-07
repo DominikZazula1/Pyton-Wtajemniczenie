@@ -1,6 +1,6 @@
 
 from datetime import date, time
-
+from datetime import datetime
 from . import permissions, movies_directory, cinema_schedule
 from .cinema_schedule import Weekday
 from .configuration import UNLIMITED_WATCHING_START_DATE, UNLIMITED_WATCHING_END_DATE
@@ -73,10 +73,10 @@ def add_movie():
 
 
 def cinema_movies_schedule():
-    cinema_date_input = input("When would you like to visit the cinema? (YYYY-MM-DD): ")
-    cinema_time_input = input("what time would you like to visit the cinema? (HH:MM): ")
-    cinema_date = date.fromisoformat(cinema_date_input)
-    cinema_time = time.fromisoformat(cinema_time_input)
+    datetime_iso_format = input("When would you like to visit the cinema? (YYYY-MM-DD HH:MM): ")
+    cinema_datetime = datetime.fromisoformat(datetime_iso_format)
+    cinema_date = cinema_datetime.date()
+    cinema_time = cinema_datetime.time()
     weekday_number = cinema_date.isoweekday()
     weekday = Weekday(weekday_number)
     print("This day you can watch:")

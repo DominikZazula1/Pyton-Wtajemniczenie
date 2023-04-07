@@ -1,10 +1,14 @@
-from new_movies import movies_directory, actions
+from new_movies.actions import cinema_movies_schedule
+from new_movies.cinema_schedule import (
+    generate_february_week_schedule,
+    weekly_schedule,
+    Weekday,
+    sort_weekly_schedule,
+)
 
 
 def run_example():
-    print(movies_directory.available_movies[0].added_at_datetime)
-    actions.add_movie()
-    print(movies_directory.available_movies[-1].added_at_datetime)
+    cinema_movies_schedule()
 
 
 if __name__ == "__main__":
