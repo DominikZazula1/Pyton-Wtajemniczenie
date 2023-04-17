@@ -1,4 +1,4 @@
-from datetime import date
+from datetime import datetime
 
 from mod_2.new_movies import movies_directory
 from mod_2.new_movies.configuration import UNLIMITED_WATCHING_START_DATE, UNLIMITED_WATCHING_END_DATE
@@ -25,7 +25,7 @@ def _get_rented_movie(user, movie):
 
 
 def _unlimited_watching_promo():
-    return UNLIMITED_WATCHING_START_DATE <= date.today() <= UNLIMITED_WATCHING_END_DATE
+    return UNLIMITED_WATCHING_START_DATE <= datetime.today().date() <= UNLIMITED_WATCHING_END_DATE
 
 
 def _watch_movie_during_unlimited_promo(user, rented_movie):
@@ -44,11 +44,19 @@ def _start_streaming(user, movie):
     print(f"User: {user} is watching {movie.info_with_date_format(user.datetime_preferences.value)}")
 
 
-def add_movie():
-    new_movie = Movie(name=input("Tytul: "),
-                      category=input("Kategoria: "),
-                      release_date=date.fromisoformat(input("Data wydania w formacie (RRRR-MM-DD, np. 2005-05-23): ")))
+def add_movie(user):
+    print("Adding new movie")
+    print("Provide movie's data")
+    name = input("Title: ")
+    category = input("Category: ")
+    date_and_time_format = user.datetime_preferences.value
+    release_date_input = input(f"Release date (in {date_and_time_format.date_format} format): ")
+    release_date = datetime.strptime(release_date_input, date_and_time_format.date_format).date()
+    new_movie = Movie(name=name,
+                      category=category,
+                      release_date=release_date)
     movies_directory.add_movie(new_movie)
+    print(f"Movie added: {new_movie.info_with_date_format(date_and_time_format)}")
 
 
 def rent_movie(user, movie):

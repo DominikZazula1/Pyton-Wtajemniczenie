@@ -5,8 +5,9 @@ from mod_2.new_movies.cinema_schedule import Weekday
 
 
 def cinema_movies_schedule(user):
-    datetime_iso_format = input("When would you like to visit the cinema? (YYYY-MM-DD HH:MM): ")
-    cinema_datetime = datetime.fromisoformat(datetime_iso_format)
+    date_and_time_format = user.datetime_preferences.value
+    datetime_iso_format = input(f"When would you like to visit the cinema? ({date_and_time_format}): ")
+    cinema_datetime = datetime.strptime(datetime_iso_format, date_and_time_format.datetime_format)
     cinema_date = cinema_datetime.date()
     cinema_time = cinema_datetime.time()
     weekday_number = cinema_datetime.weekday()+1
