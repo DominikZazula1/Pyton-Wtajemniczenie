@@ -1,4 +1,7 @@
+
+
 from mod_2.new_movies import permissions, users_directory
+from mod_2.new_movies.auth_context import AuthContext
 from mod_2.new_movies.datetime_preferences import DatetimePreference
 from mod_2.new_movies.exceptions import ActionNotAllowed, UserNotFound
 
@@ -20,9 +23,19 @@ def select_datetime_preferences(user):
 
 
 def login():
+    auth_context = AuthContext()
     while True:
-        user_login = input("Login: ")
+        user_login = input("Type in your login: ")
+        auth_context.register_login_attempt()
+        if auth_context.should_reject_attempt_due_to_lock_time():
+            auth_context.register_failed_login_attempt()
+            print("This attempt is ignored as you have exceeded auth failures limit.")
+            print(f"Please wait {auth_context.lock_time} before next attempt")
+            continue
         try:
             return users_directory.find_user_by_login(user_login)
         except UserNotFound:
-            print("User with given login not found - try again")
+            auth_context.register_failed_login_attempt()
+            print("There is no user with such login - try again")
+            if auth_context.is_failures_limit_exceeded():
+                print(f"Auth failures limit exceeded. You have to wait {auth_context.lock_time}")
