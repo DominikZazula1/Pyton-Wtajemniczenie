@@ -30,3 +30,7 @@ class ViewsLimitReached:
 
 class UserNotFound(Exception):
     pass
+
+
+class TooYoungForMovie(Exception):
+    pass

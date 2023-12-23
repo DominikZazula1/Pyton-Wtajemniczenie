@@ -1,16 +1,25 @@
 from datetime import datetime
+from enum import Enum
 
 from .exceptions import MovieAlreadySeen, InvalidRateValue
+
+
+class AgeRate(Enum):
+    GREEN = 0
+    YELLOW = 12
+    ORANGE = 16
+    RED = 18
 
 
 class Movie:
     MIN_ALLOWED_RATE = 1
     MAX_ALLOWED_RATE = 5
 
-    def __init__(self, name, category, release_date):
+    def __init__(self, name, category, release_date, age_rate):
         self.name = name
         self.category = category
         self.release_date = release_date
+        self.age_rate = age_rate
         self.added_at_datetime = datetime.today()
         self._rates = []
         self._viewers = []
@@ -36,3 +45,6 @@ class Movie:
 
         self._viewers.append(viewer_name)
         self._rates.append(rate)
+
+    def is_age_appropriate_to_watch(self, age):
+        return self.age_rate.value <= age

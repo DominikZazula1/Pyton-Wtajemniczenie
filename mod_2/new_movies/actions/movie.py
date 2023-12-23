@@ -2,7 +2,7 @@ from datetime import datetime
 
 from mod_2.new_movies import movies_directory
 from mod_2.new_movies.configuration import UNLIMITED_WATCHING_START_DATE, UNLIMITED_WATCHING_END_DATE
-from mod_2.new_movies.exceptions import MovieNotFound, ViewsLimitReached, NoCreditsForMovieRent
+from mod_2.new_movies.exceptions import MovieNotFound, ViewsLimitReached, NoCreditsForMovieRent, TooYoungForMovie
 from mod_2.new_movies.movie import Movie
 from mod_2.new_movies.rented_movie import RentedMovie
 
@@ -62,5 +62,7 @@ def add_movie(user):
 def rent_movie(user, movie):
     if user.credits_left < 1:
         raise NoCreditsForMovieRent()
+    if not movie.is_age_appropriate_to_watch(user.age):
+        raise TooYoungForMovie()
     user.rented_movies.append(RentedMovie(movie))
     user.credits_left -= 1

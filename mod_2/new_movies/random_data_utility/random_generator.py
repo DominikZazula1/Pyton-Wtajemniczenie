@@ -6,6 +6,8 @@ from datetime import date
 
 from new_movies.movie import Movie
 
+from mod_2.new_movies.movie import AgeRate
+
 MIN_VOTERS = 3
 MAX_VOTERS = 10
 
@@ -53,7 +55,10 @@ def generate_random_movies(movies_number):
         movie_index = random.randrange(0, len(movies_data))
         movie_data = movies_data.pop(movie_index)
         movie_date = generate_date()
-        movie = Movie(name=movie_data.name, category=movie_data.category, release_date=movie_date)
+        movie = Movie(name=movie_data.name,
+                      category=movie_data.category,
+                      release_date=movie_date,
+                      age_rate=AgeRate.ORANGE)
         movies.append(movie)
 
         voters_candidates = names.copy()
