@@ -1,12 +1,12 @@
-from mod_2.new_movies import movies_directory
-from new_movies.actions import user as user_actions, movie as movie_actions
+
+from mod_2.new_movies.actions.cinema import cinema_movies_schedule
+from new_movies.actions import user as user_actions
 
 
 def run_example():
     user = user_actions.login()
-    movie_to_rent = movies_directory.available_movies[0]
-    movie_actions.rent_movie(user, movie_to_rent)
-    movie_actions.watch_movie(user, movie_to_rent)
+    user_actions.select_timezone_preferences(user)
+    cinema_movies_schedule(user)
 
 
 if __name__ == "__main__":

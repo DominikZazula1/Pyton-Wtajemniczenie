@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from datetime import timedelta, datetime
+from zoneinfo import ZoneInfo
 
 from mod_2.new_movies import configuration
 
@@ -20,7 +21,7 @@ class AuthContext:
 
     def register_login_attempt(self):
         self.previous_attempt_datetime = self.current_attempt_datetime
-        self.current_attempt_datetime = datetime.now()
+        self.current_attempt_datetime = datetime.now(ZoneInfo("UTC"))
 
     def should_reject_attempt_due_to_lock_time(self):
         if self.current_attempt_datetime is None or self.previous_attempt_datetime is None:

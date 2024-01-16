@@ -3,6 +3,8 @@ from enum import Enum, auto
 
 from datetime import time, datetime, date, timedelta
 
+from zoneinfo import ZoneInfo
+
 from . import movies_directory
 from .movie import Movie
 
@@ -37,57 +39,47 @@ class MovieShowDatetime:
         return MovieShowDatetime(movie_showtime.movie, date_time)
 
 
-weekly_schedule = {
+schedule_timezone = ZoneInfo("Europe/Warsaw")
+
+_weekly_schedule_template = {
     Weekday.MONDAY: [
-        MovieShowtime(movies_directory.available_movies[0], time(15, 15)),
-        MovieShowtime(movies_directory.available_movies[1], time(17, 15)),
+        MovieShowtime(movies_directory.available_movies[0], time(15, 15, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[1], time(17, 15, tzinfo=schedule_timezone)),
     ],
     Weekday.TUESDAY: [
-        MovieShowtime(movies_directory.available_movies[3], time(17, 15)),
-        MovieShowtime(movies_directory.available_movies[2], time(15, 15)),
+        MovieShowtime(movies_directory.available_movies[3], time(17, 15, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[2], time(15, 15, tzinfo=schedule_timezone)),
     ],
     Weekday.WEDNESDAY: [
-        MovieShowtime(movies_directory.available_movies[4], time(15, 15)),
-        MovieShowtime(movies_directory.available_movies[5], time(17, 15)),
+        MovieShowtime(movies_directory.available_movies[4], time(15, 15, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[5], time(17, 15, tzinfo=schedule_timezone)),
     ],
     Weekday.THURSDAY: [
-        MovieShowtime(movies_directory.available_movies[7], time(17, 15)),
-        MovieShowtime(movies_directory.available_movies[6], time(15, 15)),
+        MovieShowtime(movies_directory.available_movies[7], time(17, 15, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[6], time(15, 15, tzinfo=schedule_timezone)),
     ],
     Weekday.FRIDAY: [
-        MovieShowtime(movies_directory.available_movies[10], time(19, 20)),
-        MovieShowtime(movies_directory.available_movies[8], time(15, 15)),
-        MovieShowtime(movies_directory.available_movies[9], time(17, 15)),
+        MovieShowtime(movies_directory.available_movies[10], time(19, 20, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[8], time(15, 15, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[9], time(17, 15, tzinfo=schedule_timezone)),
     ],
-    Weekday.SATURDAY: [MovieShowtime(movies_directory.available_movies[11], time(18, 00))],
+    Weekday.SATURDAY: [
+        MovieShowtime(movies_directory.available_movies[11], time(18, 0, tzinfo=schedule_timezone))
+    ],
     Weekday.SUNDAY: [
-        MovieShowtime(movies_directory.available_movies[12], time(13, 25)),
-        MovieShowtime(movies_directory.available_movies[13], time(14, 50)),
+        MovieShowtime(movies_directory.available_movies[12], time(13, 25, tzinfo=schedule_timezone)),
+        MovieShowtime(movies_directory.available_movies[13], time(14, 50, tzinfo=schedule_timezone)),
     ],
 }
 
 
-def sort_weekly_schedule(schedule):
-    return {
-        weekday: sorted(showtime, key=lambda movie_showtime: movie_showtime.showtime)
-        for weekday, showtime in schedule.items()
-    }
+weekly_schedule_template = {
+    weekday: sorted(showtime, key=lambda movie_showtime: movie_showtime.showtime)
+    for weekday, showtime in _weekly_schedule_template.items()
+}
 
 
-sorted_schedule = sort_weekly_schedule(weekly_schedule)
-
-
-def get_movies_showtime_by_weekday(weekday: Weekday):
-    sorted_schedule = sort_weekly_schedule(weekly_schedule)
-    return sorted_schedule[weekday]
-
-
-def generate_february_week_schedule(schedule):
-    february_21 = date(year=2021, month=2, day=21)
-    return schedule_for_week(february_21, schedule)
-
-
-def schedule_for_week(date_from_week, schedule):
+def schedule_for_week(date_from_week, schedule_template):
     weekday_number = date_from_week.isoweekday()
     offset_to_monday = weekday_number - Weekday.MONDAY.value
     monday_date = date_from_week - timedelta(days=offset_to_monday)
@@ -97,6 +89,28 @@ def schedule_for_week(date_from_week, schedule):
         particular_date = monday_date + timedelta(days=offset_to_weekday)
         result[weekday] = [
             MovieShowDatetime.from_movie_showtime_and_date(movie_showtime, particular_date)
-            for movie_showtime in schedule.get(weekday, [])
+            for movie_showtime in schedule_template.get(weekday, [])
         ]
     return result
+
+
+def schedule_for_period(start_datetime, schedule_template, period_length=timedelta(days=7)):
+    end_datetime = start_datetime + period_length
+    generator_date = start_datetime.date()
+    results = []
+    while generator_date <= end_datetime.date():
+        schedule_for_day = _schedule_for_day(generator_date, schedule_template)
+        for movie_info in schedule_for_day:
+            if start_datetime < movie_info.showdatetime < end_datetime:
+                results.append(movie_info)
+        generator_date += timedelta(days=1)
+    return results
+
+
+def _schedule_for_day(particular_date, schedule_template):
+    weekday_number = particular_date.isoweekday()
+    weekday = Weekday(weekday_number)
+    return [
+        MovieShowDatetime.from_movie_showtime_and_date(movie_showtime, particular_date)
+        for movie_showtime in schedule_template[weekday]
+    ]

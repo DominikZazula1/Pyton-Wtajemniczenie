@@ -1,5 +1,6 @@
 from datetime import datetime
 from enum import Enum
+from zoneinfo import ZoneInfo
 
 from .exceptions import MovieAlreadySeen, InvalidRateValue
 
@@ -20,7 +21,7 @@ class Movie:
         self.category = category
         self.release_date = release_date
         self.age_rate = age_rate
-        self.added_at_datetime = datetime.today()
+        self.added_at_datetime = datetime.now(tz=ZoneInfo("Europe/Warsaw"))
         self._rates = []
         self._viewers = []
 

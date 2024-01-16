@@ -1,4 +1,4 @@
-
+from zoneinfo import ZoneInfo
 
 from mod_2.new_movies import permissions, users_directory
 from mod_2.new_movies.auth_context import AuthContext
@@ -20,6 +20,11 @@ def select_datetime_preferences(user):
 
     selected_option = int(input("Select an option: "))
     user.datetime_preferences = DatetimePreference.instance_by_index(selected_option)
+
+
+def select_timezone_preferences(user):
+    timezone = input("What is your timezone (e.g Europe/Warsaw)? ")
+    user.timezone = ZoneInfo(timezone)
 
 
 def login():

@@ -2,6 +2,7 @@ from dataclasses import dataclass, field
 from datetime import date
 from enum import Enum
 from typing import List
+from zoneinfo import ZoneInfo
 
 from . import datetime_utils
 from .datetime_preferences import DatetimePreference
@@ -24,6 +25,7 @@ class User:
     role: Role
     rented_movies: List[RentedMovie] = field(default_factory=lambda: [])
     datetime_preferences: DatetimePreference = DatetimePreference.EUROPE
+    timezone: ZoneInfo = ZoneInfo("Europe/Warsaw")
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
