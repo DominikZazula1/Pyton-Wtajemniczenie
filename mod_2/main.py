@@ -5,17 +5,15 @@ from new_movies.actions import user as user_actions
 
 
 def run_example():
-    chubabuba()
-    chubabuba2()
     chubabuba3()
-    chubabuba4()
+
 
 
 def chubabuba():
     matching_examples = ["00-000", "65-197"]
     examples_without_match = ["0-000", "65197", "00a111", "00-14", "aa-bbb"]
 
-    pattern = re.compile(r"\d{2}-\d{3}")
+    pattern = re.compile(r"(\d{2})-(\d{3})")
 
     for example in matching_examples:
         print(pattern.findall(example))
@@ -42,25 +40,23 @@ def chubabuba2():
 
 
 def chubabuba3():
-    matching_examples = ["dominik@iteria.pl", "alamakota@domeroty.com"]
-    examples_without_match = ["@asdadas.a", "aasddasfa@", "dsasa.com", "sadaa@dasd", "aa-bbb"]
-
-    pattern = re.compile(r"\w+@\w+\.\w+")
-
-    for example in matching_examples:
-        print(pattern.findall(example))
-
+    user_email = input("Enter your email: ")
+    email_pattern = re.compile(r"(\w+)@(\w+)((?:\.\w+)+)")
+    email_match = email_pattern.fullmatch(user_email)
     print(20 * "-")
-    for example in examples_without_match:
-        print(pattern.findall(example))
-    print(20 * "-")
+    if email_match is None:
+        print("this is not email")
+        return
+    print(f"name:\t\t{email_match[1]}")
+    print(f"domain:\t\t{email_match[2]}")
+    print(f"extension:\t{email_match[3]}")
 
 
 def chubabuba4():
-    matching_examples = ["https://www.dominikiteria.pl", "http://www.alamakotadomeroty.com"]
+    matching_examples = ["https://www.dominikiteria.pl", "www.alamakotadomeroty.com"]
     examples_without_match = ["htts://www.dominikiteria.pl", "https//www.dominikiteria.pl", "https://dominikiteria", "http:/alamakota@domeroty.com", "aa-bbasdddb"]
 
-    pattern = re.compile(r"https?://www\.\w+\.\w+")
+    pattern = re.compile(r"^(?:(https|http)://)?www\.(\w+)\.\w+")
     for example in matching_examples:
         print(pattern.findall(example))
 
