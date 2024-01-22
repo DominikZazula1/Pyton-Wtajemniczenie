@@ -5,22 +5,38 @@ from new_movies.actions import user as user_actions
 
 
 def run_example():
-    chubabuba3()
+    # find_all_emails("To jest tekst, który ma adresy email: mikolaj@pyjazz.com oraz JanPrzykładowy@pyjazz.pl")
+    find_iter_emails("To jest tekst, który ma adresy email: mikolaj@pyjazz.com oraz JanPrzykładowy@pyjazz.pl")
 
 
-
-def chubabuba():
-    matching_examples = ["00-000", "65-197"]
-    examples_without_match = ["0-000", "65197", "00a111", "00-14", "aa-bbb"]
-
-    pattern = re.compile(r"(\d{2})-(\d{3})")
-
-    for example in matching_examples:
-        print(pattern.findall(example))
-
+def find_all_emails(text):
+    email_pattern = re.compile(r"(\w+)@(\w+)((?:\.\w+)+)")
+    email_matches = email_pattern.findall(text)
     print(20 * "-")
-    for example in examples_without_match:
-        print(pattern.findall(example))
+    if email_matches is None:
+        print("text doesn't contains email")
+        return
+    for email_match in email_matches:
+        print_email_details(email_match)
+
+
+def find_iter_emails(text):
+    email_pattern = re.compile(r"(\w+)@(\w+)((?:\.\w+)+)")
+    email_matches = email_pattern.finditer(text)
+    print(20 * "-")
+    if email_matches is None:
+        print("text doesn't contains email")
+        return
+    for email_match in email_matches:
+        print_email_details(email_match)
+
+
+def print_email_details(email):
+    print(f"{email[0]} to positions: {email.start()} - {email.end()}")
+    print(20 * "-")
+    print(f"name:\t\t{email[1]}")
+    print(f"domain:\t\t{email[2]}")
+    print(f"extension:\t{email[3]}")
     print(20 * "-")
 
 
