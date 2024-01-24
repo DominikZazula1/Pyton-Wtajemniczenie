@@ -5,8 +5,7 @@ from new_movies.actions import user as user_actions
 
 
 def run_example():
-    # find_all_emails("To jest tekst, który ma adresy email: mikolaj@pyjazz.com oraz JanPrzykładowy@pyjazz.pl")
-    find_iter_emails("To jest tekst, który ma adresy email: mikolaj@pyjazz.com oraz JanPrzykładowy@pyjazz.pl")
+    chubabuba3()
 
 
 def find_all_emails(text):
@@ -57,7 +56,7 @@ def chubabuba2():
 
 def chubabuba3():
     user_email = input("Enter your email: ")
-    email_pattern = re.compile(r"(\w+)@(\w+)((?:\.\w+)+)")
+    email_pattern = re.compile(r"(\w+)@(\w+)((?:\.(?:pl|com)))", flags=re.IGNORECASE)
     email_match = email_pattern.fullmatch(user_email)
     print(20 * "-")
     if email_match is None:
