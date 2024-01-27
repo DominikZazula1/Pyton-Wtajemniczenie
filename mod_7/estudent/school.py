@@ -1,4 +1,6 @@
+from estudent.errors import PlacesLimitError
 from estudent.student import Student
+from typing import Optional
 
 
 class School:
@@ -11,7 +13,6 @@ class School:
         self._students = students
         self._promote_lucky_students()
         self.departments = self._split_students_to_departments()
-        self.teacher_names: list[str] = []
 
     def _promote_lucky_students(self) -> None:
         for index, student in enumerate(self.students):
@@ -23,7 +24,7 @@ class School:
         departments_letters = ["A", "B", "C", "D", "E", "F"]
         places_in_departments = len(departments_letters) * School.MAX_STUDENTS_PER_DEPARTMENT
         if places_in_departments < len(self._students):
-            raise ValueError("Przekroczono limit miejsc")
+            raise PlacesLimitError(places_limit=School.MAX_STUDENTS_PER_DEPARTMENT)
 
         current_department_number = -1
         for index, student in enumerate(self.students):
@@ -56,8 +57,16 @@ class School:
         if len(value) < School.MAX_STUDENTS_NUMBER:
             self._students = value
         else:
-            raise ValueError("Przekroczono limit miejsc")
+            raise PlacesLimitError(
+                places_limit=School.MAX_STUDENTS_NUMBER,
+                message=f"W szkole jest tylko {School.MAX_STUDENTS_NUMBER} miejsc,"
+                        f" nie można przypisać {len(value)} uczniów"
+            )
         self.departments = self._split_students_to_departments()
 
-    def add_teacher(self, teacher_name: str) -> None:
-        self.teacher_names.append(teacher_name)
+    # Lista studentów albo None?
+    @property
+    def best_student(self) -> Optional[list[Student]]:
+        if len(self.students):
+            return sorted(self.students, key=lambda student: student.grades_avg)
+        return None
